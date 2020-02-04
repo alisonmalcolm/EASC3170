@@ -12,4 +12,4 @@ dependencies:
   - bokeh
   - dask
   - scipy
-  - nbformat
+  - nbformat >=4.3
