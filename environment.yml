@@ -12,4 +12,4 @@ dependencies:
   - bokeh
   - dask
   - scipy
-  - nbformat >=4.3
+  - cartopy
