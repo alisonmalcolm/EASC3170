@@ -2,7 +2,8 @@ import numpy as np
 import cartopy.crs as ccrs
 import matplotlib.pyplot as plt
 import math
-#from IPython.ipywidgets import  interactive, IntSlider, widget, FloatText, FloatSlider, Checkbox
+#from IPython.html.widgets import  interactive, IntSlider, widget, FloatText, FloatSlider, Checkbox
+#from IPython.html.ipywidgets import  interactive, IntSlider, widget, FloatText, FloatSlider, Checkbox
 from ipywidgets import  interactive, IntSlider, widget, FloatText, FloatSlider, Checkbox, Layout
 import os
 from math import floor
@@ -99,7 +100,7 @@ def MyCircle(cx,cy,rad):
     return x,y
     
 
-#19.421°N 78.763°
+#19.421N 78.763
 
 def PlotLocations(R1,R2,R3,ind_to_plot,Show=False):
     
@@ -173,8 +174,8 @@ def viewSeismogram(Tp,Ts,stnum):
 
 def PlotPicks(stnum):
     Q = interactive(lambda Tp, Ts: viewSeismogram(Tp,Ts,stnum),
-                    Tp=IntSlider(min=1, max=660, step=1, value=60),
-                    Ts=IntSlider(min=1, max=660, step=1,value=150,continuous_update=True,layout=Layout(width='50%', height='80px')))
+                    Tp=IntSlider(min=1, max=660, step=1, value=60,layout=Layout(width='65%', height='80px')),
+                    Ts=IntSlider(min=1, max=660, step=1,value=150,continuous_update=True,layout=Layout(width='65%', height='80px')))
 
     return Q
 
