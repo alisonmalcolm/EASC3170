@@ -738,7 +738,7 @@ def ViewPrismAndData():
     return Q
 
 
-def PipeByPrism(depth, pdec, x0, npts2D, xylim, rx_h, profile, View_elev, View_azim):
+def PipeByPrism(depth, pdec, npts2D, xylim, rx_h, profile, View_elev, View_azim):
     #p = definePrism(dx, dy, dz, depth,pinc=pinc, pdec=pdec, susc = 1., Einc=90., Edec=0., Bigrf=1e-6)
     p = definePrism()
     p.dx=0.1
@@ -746,6 +746,7 @@ def PipeByPrism(depth, pdec, x0, npts2D, xylim, rx_h, profile, View_elev, View_a
     p.dz=0.1
     p.y0=0.0
     p.z0 =-depth
+    p.x0=0.0
 
     p.pinc, p.pdec = 0.0, pdec
 
@@ -756,7 +757,7 @@ def PipeByPrism(depth, pdec, x0, npts2D, xylim, rx_h, profile, View_elev, View_a
     prob = MAG.problem()
     prob.prism = p
 
-    p.x0=x0
+#    p.x0=x0
     p.dec=pdec
     p.z0=-depth
 
@@ -771,7 +772,6 @@ def ViewPipeByPrism(depth, dec, xylim=3.):
     Q=widgets.interactive(PipeByPrism \
                             , depth=widgets.FloatSlider(min=0., max=10., step=0.1, value=depth, continuous_update=False,description='Pipe z')\
                             , pdec=widgets.FloatSlider(min=-90., max=90., step=5.,value=90.0,description='Pipe dec') \
-                            , x0=widgets.FloatSlider(min=-5., max=5., step=0.1,value=0.0,description='pipe x') \
                             , npts2D=widgets.IntSlider(min=5, max=100, step=5, value=npts2D, continuous_update=False,description='npts grid') \
                             , xylim=widgets.FloatSlider(min=1, max=50, step=5, value=10.0, continuous_update=False,description='xy max') \
                             , rx_h=widgets.FloatSlider(min=0.1, max=2.5, step=0.1, value=2.0, continuous_update=False,description='survey height') \
@@ -986,23 +986,24 @@ def ViewPipeIncField(Box):
 
     prob=Box.result[1]
 
-    def SetupPipeField(Binc,Bdec,BF,susc,rx_h,depth,x0):
+    def SetupPipeField(Binc,Bdec,BF,susc,rx_h,depth):
+
         prob.survey.rx_h=rx_h
         prob.prism.z0=-depth
-        prob.prism.x0=x0
+        prob.prism.x0=0.0
 #        prob.survey.profile=profile
 
         return PlotPipeField(prob,Binc,Bdec,BF,susc)
+
 
 
     Q = widgets.interactive(SetupPipeField \
                           , Binc=widgets.FloatSlider(min=-90.,max=90,step=5,value=65,continuous_update=False) \
                           , Bdec=widgets.FloatSlider(min=-90.,max=90,step=5,value=-20,continuous_update=False) \
                           , BF=widgets.FloatSlider(min=45000.,max=70000,step=100,value=50100,continuous_update=False) \
-                          , susc=widgets.FloatSlider(min=0.,max=200,step=0.1,value=100,continuous_update=False)
+                          , susc=widgets.FloatSlider(min=0.,max=200,step=0.1,value=100,continuous_update=False) \
                           , rx_h=widgets.FloatSlider(min=0.1, max=2.5, step=0.1, value=prob.survey.rx_h, continuous_update=False,description='survey height') \
-                          , depth=widgets.FloatSlider(min=0., max=10., step=0.1, value=prob.prism.z0, continuous_update=False,description='Pipe z')
-                          , x0=widgets.FloatSlider(min=-5.0, max=5.0, step=0.1, value=prob.prism.x0, continuous_update=False,description='Pipe x')
+                          , depth=widgets.FloatSlider(min=0., max=10., step=0.1, value=-prob.prism.z0, continuous_update=False,description='Pipe z') \
 #                          , profile=prob.survey.profile
                           )
 
