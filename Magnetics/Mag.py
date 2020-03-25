@@ -717,13 +717,13 @@ def ViewPrismAndData():
 
 
     Q = widgets.interactive(PrismAndData \
-                            , dx=widgets.FloatSlider(min=1e-4, max=500., step=10.0, value=20, continuous_update=False) \
-                            , dy=widgets.FloatSlider(min=1e-4, max=500., step=10.0, value=20, continuous_update=False) \
-                            , dz=widgets.FloatSlider(min=1e-4, max=100., step=1.0, value=20, continuous_update=False) \
-                            , depth=widgets.FloatSlider(min=0., max=100., step=0.1, value=-10, continuous_update=False)\
+                            , dx=widgets.FloatSlider(min=1e-4, max=500., step=10.0, value=120, continuous_update=False) \
+                            , dy=widgets.FloatSlider(min=1e-4, max=500., step=10.0, value=120, continuous_update=False) \
+                            , dz=widgets.FloatSlider(min=1e-4, max=100., step=1.0, value=7, continuous_update=False) \
+                            , depth=widgets.FloatSlider(min=0., max=100., step=0.1, value=10, continuous_update=False)\
                             , pinc=(-90., 90., 5.) \
                             , pdec=(-90., 90., 5.) \
-                            , susc=widgets.FloatSlider(min=0,max=10.0, step=0.5)
+                            , susc=widgets.FloatSlider(min=0,max=10.0, value=5.0,step=0.5)
                             , npts2D=widgets.IntSlider(min=5, max=100, step=5, value=20, continuous_update=False) \
                             , xylim=widgets.FloatSlider(min=1, max=200, step=10, value=100, continuous_update=False) \
                             , rx_h=widgets.FloatSlider(min=0.1, max=2.5, step=0.1, value=1.5, continuous_update=False) \
@@ -785,6 +785,7 @@ def ViewPipeByPrism(depth, dec, xylim=3.):
 def PlotPipeField(prob2D,Binc,Bdec,Bigrf,susc,fig=None,axs=None, dolegend=True):
 
 
+    
     Q=0.0
     rinc=0.0
     rdec=0.0
@@ -825,6 +826,8 @@ def PlotPipeField(prob2D,Binc,Bdec,Bigrf,susc,fig=None,axs=None, dolegend=True):
     # Compute fields from prism
     magi, magr = prob1D.fields()
 
+    print(np.max(magi),np.max(magr))
+
     if fig is None:
         f = plt.figure(figsize = (10, 5))
         gs = gridspec.GridSpec(2, 1,height_ratios=[2,1])
@@ -847,28 +850,32 @@ def PlotPipeField(prob2D,Binc,Bdec,Bigrf,susc,fig=None,axs=None, dolegend=True):
     ax0.grid(True)
 
     if prob2D.survey.profile == "EW":
+
         if ax1 is not 0:
             ax1.set_xlabel("Easting (m)")
-            ax0.plot(distance+prob2D.survey.xr[0], magi+magr, 'k', label='total')
             ax1.plot(x0+prob2D.survey.xr[0], p.z0, 'ko',label='pipe')
             ax1.plot(xlim+prob2D.survey.xr[0], [prob2D.survey.rx_h, prob2D.survey.rx_h], 'b--',label='Magnetometer Height')
-        ax0.set_xlabel("Easting (m)")
+        if ax0 is not 0:
+            ax0.plot(distance+prob2D.survey.xr[0], magi+magr, 'k', label='total')
+            ax0.set_xlabel("Easting (m)")
 
     elif prob2D.survey.profile == "NS":
         if ax1 is not 0:
             ax1.set_xlabel("Northing (m)")
-            ax0.plot(distance+prob2D.survey.yr[0], magi+magr, 'k', label='total')
             ax1.plot(x0+prob2D.survey.yr[0], p.z0, 'ko',label='pipe')
             ax1.plot(xlim+prob2D.survey.yr[0], [prob2D.survey.rx_h, prob2D.survey.rx_h], 'b--',label='Magnetometer Height')
-        ax0.set_xlabel("Northing (m)")
+        if ax0 is not 0:
+            ax0.plot(distance+prob2D.survey.yr[0], magi+magr, 'k', label='total')
+            ax0.set_xlabel("Northing (m)")
 
     elif prob2D.survey.profile == "45N":
         if ax1 is not 0:
             ax1.set_xlabel("Distance SW-NE (m)")
-            ax0.plot(distance, magi+magr, 'k', label='total')
             ax1.plot(x0, p.z0, 'ko',label='pipe')
             ax1.plot(xlim, [prob2D.survey.rx_h, prob2D.survey.rx_h], 'b--',label='Magnetometer Height')
-        ax0.set_xlabel("Distance SW-NE (m)")
+        if ax0 is not 0:
+            ax0.plot(distance, magi+magr, 'k', label='total')
+            ax0.set_xlabel("Distance SW-NE (m)")
 
     if ax1 is not 0:
         ax1.grid(True)
@@ -1430,8 +1437,10 @@ def FitGravMagData():
         ax_mag.grid(which="both")
         ax_grav.grid(which="both")
         ax_prism.grid(which="both")
-        
-        plt.setp([a.get_xticklabels() for a in fig.axes], visible=False)
+
+
+        plt.setp([ax_grav.get_xticklabels()], visible=False)
+        plt.setp([ax_mag.get_xticklabels()], visible=False)
 
         
         plt.show()
