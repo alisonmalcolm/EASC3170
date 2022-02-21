@@ -140,9 +140,15 @@ def plot_two_sphere_profiles(x1=0.0,z1=200.0,rho1=1000., srad1=200.,x2 = 20.0, z
 #    rho1=1000
 #    rho2=2000
 
+
+    #import pandas as pd
+    #df = pd.read_csv('Terrain corrected profile.dat')
+    #dist = df['Distance'].to_numpy()
+    #grav = df['grav'].to_numpy()
     y1=0.0
     y2=0.0
     obs_range=np.arange(-1000,1000,10)
+    
     
     x=[x1,x2]
     y=[y1,y2]
@@ -216,10 +222,15 @@ def plot_sphere_cylinder_profiles(x1=0.0,z1=200.,rho1=1000., srad1=200.,x2 = 20.
         g2 = calc_cylinder_gravity(xobs,xsrc2,rho[1],src_radius[1])
         gravity_profile2_z.append(g2[2])
 
-    
+    #import pandas as pd
+    #df = pd.read_csv('Terrain corrected profile.dat')
+    #df.plot(x="Distance", y="grav")
+    #dist = df['Distance'].to_numpy()
+    #grav = df['grav'].to_numpy()
    
     ax1.plot(obs_range, gravity_profile_z, linewidth=4,color=cvec[0],label='sphere')
-    ax1.plot(obs_range, gravity_profile2_z, linewidth=4,color=cvec[1],label='cylinder')
+    #ax1.plot(obs_range, gravity_profile2_z, linewidth=4,color=cvec[1],label='cylinder')
+    #ax1.plot(dist, grav, linewidth=4,color=cvec[1],label='terrain_grav')
     circle = plt.Circle((xsrc1[0],xsrc1[2]),src_radius[0],color=cvec[0])
     ax2.add_artist(circle)
     circle = plt.Circle((xsrc2[0],xsrc2[2]),src_radius[1],color=cvec[1])
@@ -275,11 +286,12 @@ def plot_sphere_cylinder_slab_profiles(x1=0.0,z1=200.,rho1=1000., srad1=200.,
         gravity_profile2_z.append(g2[2])
     gravity_profile3_z = calc_slab_gravity(obs_range,x3,z3,rho[2],t3)
     
-    
+    #grav_tot = g2 + gravity_profile3_z
    
     ax1.plot(obs_range, gravity_profile_z, linewidth=4,color=cvec[0],label='sphere')
     ax1.plot(obs_range, gravity_profile2_z, linewidth=4,color=cvec[1],label='cylinder')
     ax1.plot(obs_range, gravity_profile3_z, linewidth=4,color=cvec[2],label='slab')
+    #ax1.plot(obs_range, grav_tot, linewidth=4,color=cvec[2],label='slab')
     circle = plt.Circle((xsrc1[0],xsrc1[2]),src_radius[0],color=cvec[0])
     ax2.add_artist(circle)
     circle = plt.Circle((xsrc2[0],xsrc2[2]),src_radius[1],color=cvec[1])
