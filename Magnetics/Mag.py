@@ -1313,9 +1313,9 @@ def FitGravMagData():
 
     def PlotGravMagData(width1,thick1,xpos1,depth1,susc1,rho1,width2,thick2,xpos2,depth2,susc2,rho2,width3,thick3,xpos3,depth3,susc3,rho3,pinc):
         
-        
-        data=np.loadtxt('Lab10Data.txt')
-        x=data[:,1]
+     
+        data=np.loadtxt('Lab10_Data.txt', encoding = "utf-16")
+        x=data[:,0]
         true_grav=data[:,2]
         true_mag=data[:,3]
 
@@ -1344,7 +1344,7 @@ def FitGravMagData():
         rinc=0.0
         rdec=0.0
     
-        linex=np.linspace(-100,100,200)
+        linex=np.linspace(0,1000,266)
         liney=np.zeros_like(linex)
         linez=np.ones_like(linex)*rx_h
         linez_grav=np.zeros_like(linex)
@@ -1447,25 +1447,25 @@ def FitGravMagData():
         
         return True
     Q = widgets.interactive(PlotGravMagData \
-                            , xpos1=widgets.FloatSlider(min=-100, max=100., step=2.0, value=20, continuous_update=False) \
-                            , xpos2=widgets.FloatSlider(min=-100, max=100., step=2.0, value=20, continuous_update=False) \
-                            , xpos3=widgets.FloatSlider(min=-100, max=100., step=2.0, value=20, continuous_update=False) \
-                            , width1=widgets.FloatSlider(min=1e-4, max=500., step=10.0, value=20, continuous_update=False) \
+                            , xpos1=widgets.FloatSlider(min=-100, max=1000., step=10.0, value=500, continuous_update=False) \
+                            , xpos2=widgets.FloatSlider(min=-100, max=1000., step=10.0, value=500, continuous_update=False) \
+                            , xpos3=widgets.FloatSlider(min=-100, max=1000., step=10.0, value=500, continuous_update=False) \
+                            , width1=widgets.FloatSlider(min=1e-4, max=750., step=10.0, value=20, continuous_update=False) \
                             , thick1=widgets.FloatSlider(min=1e-4, max=100., step=1.0, value=20, continuous_update=False) \
                             , depth1=widgets.FloatSlider(min=0., max=100., step=0.1, value=-10, continuous_update=False)\
-                            , width2=widgets.FloatSlider(min=1e-4, max=500., step=10.0, value=20, continuous_update=False) \
+                            , width2=widgets.FloatSlider(min=1e-4, max=750., step=10.0, value=20, continuous_update=False) \
                             , thick2=widgets.FloatSlider(min=1e-4, max=100., step=1.0, value=20, continuous_update=False) \
                             , depth2=widgets.FloatSlider(min=0., max=100., step=0.1, value=-10, continuous_update=False)\
-                            , width3=widgets.FloatSlider(min=1e-4, max=500., step=10.0, value=20, continuous_update=False) \
+                            , width3=widgets.FloatSlider(min=1e-4, max=750., step=10.0, value=20, continuous_update=False) \
                             , thick3=widgets.FloatSlider(min=1e-4, max=100., step=1.0, value=20, continuous_update=False) \
                             , depth3=widgets.FloatSlider(min=0., max=100., step=0.1, value=-10, continuous_update=False)\
                             , pinc=(-90., 90., 5.) \
-                            , susc1=widgets.FloatSlider(min=0,max=10.0, step=0.5)
-                            , susc2=widgets.FloatSlider(min=0,max=10.0, step=0.5)
-                            , susc3=widgets.FloatSlider(min=0,max=10.0, step=0.5)
-                            , rho1=widgets.FloatSlider(min=0,max=1000.0, step=50)
-                            , rho2=widgets.FloatSlider(min=0,max=1000.0, step=50)
-                            , rho3=widgets.FloatSlider(min=0,max=1000.0, step=50)
+                            , susc1=widgets.FloatSlider(min=0,max=1.0, step=0.01)
+                            , susc2=widgets.FloatSlider(min=0,max=1.0, step=0.01)
+                            , susc3=widgets.FloatSlider(min=0,max=1.0, step=0.01)
+                            , rho1=widgets.FloatSlider(min=-1,max=1.0, step=0.05)
+                            , rho2=widgets.FloatSlider(min=-1,max=1.0, step=0.05)
+                            , rho3=widgets.FloatSlider(min=-1,max=1.0, step=0.05)
                             )
 
     return Q
