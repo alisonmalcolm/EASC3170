@@ -4,7 +4,7 @@ import numpy as np
 import warnings
 warnings.filterwarnings('ignore')
 #try:
-from IPython.html.widgets import  interactive, IntSlider, widget, FloatText, FloatSlider
+from IPython.html.widgets import  interactive, IntSlider, widget, FloatText, FloatSlider,Layout
 #    pass
 #except Exception, e:
 #    from ipywidgets import interactive, IntSlider, widget, FloatText, FloatSlider
@@ -75,6 +75,26 @@ def refraction1(x, v1, v2, z1):
     ref1 = np.ones_like(x)*np.nan
     ref1[act1] = 1./v2*x[act1] + ti1
     return ref1
+
+def diprefraction1(x, v1, v2, z1,alpha):
+    """
+    refraction off of first interface
+    """
+    h1=z1
+    th_crit = np.arcsin(v1/v2)
+    h2=z1+x[-1]*np.tan(alpha)
+    d1=h1*np.sin(np.pi/2+alpha)/np.sin(np.pi/2-th_crit);
+    d3=h2*np.sin(np.pi/2-alpha)/np.sin(np.pi/2-th_crit);
+    d2=(x-d1*np.sin(th_crit-alpha)-d3*np.sin(th_crit+alpha))/np.cos(alpha);
+
+    t_dir=direct(x,v1)
+    
+    t_refr1=(d1+d3)/v1+d2/v2;
+    ref1 = np.ones_like(x)*np.nan
+    act1=t_dir>t_refr1
+    ref1[act1] = t_refr1[act1]
+    return ref1
+
 
 def refraction2(x, v1, v2, v3, z1, z2):
     theta1 = np.arcsin(v1/v2)
@@ -295,3 +315,94 @@ def view3diagrams(x0,dx,v1,v2,v3,z1,z2):
 
 if __name__ == '__main__':
     plotWavelet(wavf)
+
+def FitGlacialData(datset=1):
+    Q = interactive(lambda tI, v: showWiggleGlacTX(datset,tI=tI/1000., v=v),
+                 tI=FloatSlider(min=-1, max=5, step=0.2,value=0.0,layout=Layout(width='50%')),
+                 v=FloatSlider(min=500, max=4500, step=20,value=2000.,layout=Layout(width='50%')))
+    return Q
+
+
+def showWiggleGlacTX(datset=1, tI=0.0, v=1000., ax=None, noise=False):
+    ax = plotWiggleGlacTX(datset,tI, v, ax)
+    plt.show()
+    return True
+
+def plotWiggleGlacTX(datset,tI=0.0, v=1000.0,  ax=None):
+   # print(v)
+    t = np.arange(0,10,.1)
+    xmax=11.6
+    x = np.arange(0,xmax,.5)
+
+
+    if ax is None:
+        fig, ax = plt.subplots(1, 1, figsize=(7, 8))
+
+    if datset==1:
+        dat1=np.load('Glac_Dat1.npz')
+        dat=dat1['image']
+        temp = tI + 1./v*x
+    
+    elif datset==2:    
+        dat2=np.load('Glac_Dat2.npz')
+        dat=dat2['image']
+        temp = tI - 1./v*(x-xmax)
+        
+    else:
+        print("datset must be specified and must be either 1 or 2")
+        return
+
+
+    plt.imshow(dat,extent=[-.20,11.5,10.,0],aspect='auto')
+#    wiggleVarx(data_convolved.T, x=x, sampr=dt, lwidth=1., scale=0.2, ax=ax)
+    
+    #print(temp)
+    ax.plot(x, 1000.*temp, 'r', lw=2)
+    if datset==2:
+        ax.yaxis.set_label_position('right')
+        ax.yaxis.tick_right()
+        #ax.invert_xaxis()
+    ax.set_ylim(10, -1)
+    #ax.invert_yaxis()
+    #ax.set_xlim(-1., 130)
+    ax.set_xlabel("Offset (m)",fontsize=16)
+    ax.set_ylabel("Time (s)",fontsize=16)
+    ax.xaxis.set_label_position('top') 
+    ax.xaxis.tick_top()
+    return ax
+
+def plotGlacPoint(datset=1,t=2.0, x=10.0,  ax=None):
+    if ax is None:
+        fig, ax = plt.subplots(1, 1, figsize=(7, 8))
+
+    if datset==1:
+        dat1=np.load('Glac_Dat1.npz')
+        dat=dat1['image']
+     
+    elif datset==2:    
+        dat2=np.load('Glac_Dat2.npz')
+        dat=dat2['image']
+        
+    else:
+        print("datset must be specified and must be either 1 or 2")
+        return
+
+
+    plt.imshow(dat,extent=[-.20,11.5,10.,0],aspect='auto')
+    
+    plt.plot(x,t,'o',markersize=12)
+#    wiggleVarx(data_convolved.T, x=x, sampr=dt, lwidth=1., scale=0.2, ax=ax)
+    
+    #print(temp)
+    if datset==2:
+        ax.yaxis.set_label_position('right')
+        ax.yaxis.tick_right()
+        #ax.invert_xaxis()
+    ax.set_ylim(10, -1)
+    #ax.invert_yaxis()
+    #ax.set_xlim(-1., 130)
+    ax.set_xlabel("Offset (m)",fontsize=16)
+    ax.set_ylabel("Time (s)",fontsize=16)
+    ax.xaxis.set_label_position('top') 
+    ax.xaxis.tick_top()
+    return ax
