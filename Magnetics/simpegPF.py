@@ -133,7 +133,7 @@ class problem(object):
 
     def extractFields(self, bvec):
 
-        nD = np.int(bvec.shape[0]/3)
+        nD = int(bvec.shape[0]/3)
         bvec = np.reshape(bvec, (3, nD))
 
         # rot = Utils.mkvc(Utils.dipazm_2_xyz(-self.prism.pinc, -self.prism.pdec))
